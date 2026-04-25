@@ -12,21 +12,191 @@
         }
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             font-family: Georgia, 'Times New Roman', serif;
             background: #fafafa;
             color: #333;
+            padding: 2rem 1rem;
         }
         img {
             max-width: 100%;
-            max-height: 100vh;
+            max-height: 85vh;
             object-fit: contain;
+            margin-bottom: 3rem;
         }
+        .rsvp-section {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .rsvp-form {
+            text-align: left;
+        }
+        .rsvp-section h2 {
+            font-weight: normal;
+            font-size: 1.8rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        .rsvp-section p.subtitle {
+            font-style: italic;
+            color: #888;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .rsvp-form label {
+            display: block;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+            margin-top: 1rem;
+        }
+        .rsvp-form input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            color: #333;
+            transition: border-color 0.2s;
+        }
+        .rsvp-form input:focus {
+            outline: none;
+            border-color: #999;
+        }
+        .rsvp-form input[type="number"] {
+            max-width: 120px;
+        }
+        .rsvp-form button {
+            display: block;
+            margin-top: 2.5rem;
+            padding: 0.8rem 2.5rem;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 1rem;
+            background: #333;
+            color: #fafafa;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: background 0.2s;
+        }
+        .rsvp-form button:hover {
+            background: #555;
+        }
+        .rsvp-form button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .rsvp-message {
+            margin-top: 1.2rem;
+            font-size: 0.95rem;
+            min-height: 1.5em;
+        }
+        .rsvp-message.success { color: #5a7a5a; }
+        .rsvp-message.error { color: #a05050; }
     </style>
 </head>
 <body>
     <img src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
+
+    <section class="rsvp-section">
+        <h2>Potvrďte účast</h2>
+        <p class="subtitle">Prosíme, dejte nám vědět, zda se zúčastníte.</p>
+
+        <form class="rsvp-form" id="rsvpForm" novalidate>
+            <label for="jmeno">Jméno</label>
+            <input type="text" id="jmeno" name="jmeno"
+                   required placeholder="Jméno a příjmení" autocomplete="name">
+
+            <label for="pocet_osob">Počet osob</label>
+            <input type="number" id="pocet_osob" name="pocet_osob"
+                   required min="0" max="20" value="1">
+
+            <label for="pocet_deti">Počet dětí</label>
+            <input type="number" id="pocet_deti" name="pocet_deti"
+                   required min="0" max="20" value="0">
+
+            <!-- Honeypot anti-spam field -->
+            <input type="text" name="website" id="honeypot"
+                   style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
+            <button type="submit">Odeslat</button>
+        </form>
+
+        <div class="rsvp-message" id="rsvpMessage"></div>
+    </section>
+
+    <script>
+    (function() {
+        var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLyi4ucY7d9vyc8ntimOKoMIFBScfEJ8EOEs3K5lzSKRK87YAysZkNkBBfZXBXEdi-/exec';
+
+        var form = document.getElementById('rsvpForm');
+        var msg  = document.getElementById('rsvpMessage');
+        var btn  = form.querySelector('button');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var jmeno     = form.jmeno.value.trim();
+            var pocetOsob = parseInt(form.pocet_osob.value, 10);
+            var pocetDeti = parseInt(form.pocet_deti.value, 10);
+
+            if (!jmeno) {
+                showMsg('Prosíme, vyplňte své jméno.', 'error');
+                return;
+            }
+            if (isNaN(pocetOsob) || pocetOsob < 0) {
+                showMsg('Prosíme, zadejte platný počet osob.', 'error');
+                return;
+            }
+            if (isNaN(pocetDeti) || pocetDeti < 0) {
+                showMsg('Prosíme, zadejte platný počet dětí.', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Odesílám...';
+            showMsg('', '');
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jmeno: jmeno,
+                    pocet_osob: pocetOsob,
+                    pocet_deti: pocetDeti,
+                    website: form.honeypot.value
+                })
+            })
+            .then(function() {
+                showMsg('Děkujeme za potvrzení!', 'success');
+                form.reset();
+                form.pocet_osob.value = '1';
+                form.pocet_deti.value = '0';
+            })
+            .catch(function() {
+                showMsg('Došlo k chybě. Zkuste to prosím znovu.', 'error');
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.textContent = 'Odeslat';
+            });
+        });
+
+        function showMsg(text, type) {
+            msg.textContent = text;
+            msg.className = 'rsvp-message' + (type ? ' ' + type : '');
+        }
+    })();
+    </script>
 </body>
 </html>
