@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pavlína &amp; Luděk</title>
-    <script src="https://cdn.jsdelivr.net/npm/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
+    <script src="https://unpkg.com/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
     <style>
         * {
             margin: 0;
@@ -187,8 +187,8 @@
 
         /* Make DeepChat fill the panel */
         #chat-panel deep-chat {
-            width: 360px;
-            height: 520px;
+            width: 100%;
+            height: 100%;
             border-radius: 12px;
         }
 
@@ -196,9 +196,6 @@
             #chat-panel {
                 right: 0.5rem;
                 width: calc(100vw - 1rem);
-            }
-            #chat-panel deep-chat {
-                width: 100%;
             }
         }
     </style>
@@ -255,7 +252,11 @@
     <!-- Floating chat bubble -->
     <button id="chat-bubble" aria-label="Otevřít asistenta">💬</button>
     <div id="chat-panel" role="dialog" aria-label="Asistent">
-        <deep-chat id="deep-chat" style="border-radius:12px;"></deep-chat>
+        <deep-chat
+            connect='{"url":"/api/chat","method":"POST"}'
+            introMessage='{"text":"Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby. Na co se chcete zeptat?"}'
+            messageStyles='{"default":{"ai":{"bubble":{"backgroundColor":"#f0f0f0","color":"#333"}},"user":{"bubble":{"backgroundColor":"#333","color":"#fafafa"}}}}'
+        ></deep-chat>
     </div>
 
     <script>
@@ -270,23 +271,6 @@
                 document.getElementById('tab-info').hidden = (btn.dataset.tab !== 'info');
             });
         });
-
-        /* ── DeepChat config ── */
-        function initDeepChat() {
-            var chatEl = document.getElementById('deep-chat');
-            chatEl.connect = { url: '/api/chat', method: 'POST' };
-            chatEl.introMessage = { text: 'Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?' };
-            chatEl.browserStorage = { maxMessages: -1 };
-            chatEl.messageStyles = {
-                default: {
-                    ai:   { bubble: { backgroundColor: '#f0f0f0', color: '#333', fontFamily: 'Georgia, serif' } },
-                    user: { bubble: { backgroundColor: '#333',    color: '#fafafa', fontFamily: 'Georgia, serif' } }
-                }
-            };
-            chatEl.submitButtonStyles = { submit: { container: { default: { backgroundColor: '#333' }, hover: { backgroundColor: '#555' } } } };
-            chatEl.inputAreaStyle = { fontFamily: 'Georgia, serif' };
-        }
-        customElements.whenDefined('deep-chat').then(initDeepChat);
 
         /* ── Chat bubble toggle ── */
         var bubble = document.getElementById('chat-bubble');
