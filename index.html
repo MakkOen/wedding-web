@@ -318,19 +318,15 @@
     var chatEl = document.getElementById('deep-chat');
     chatEl.style.width = '360px';
     chatEl.style.height = '520px';
-    function getChatConnect() {
+    chatEl.connect = { url: '/api/chat', method: 'POST' };
+    chatEl.requestInterceptor = function(body) {
         var prevId = sessionStorage.getItem('chatResponseId');
-        return {
-            url: '/api/chat',
-            method: 'POST',
-            additionalBodyProps: prevId ? { previousResponseId: prevId } : {}
-        };
-    }
-    chatEl.connect = getChatConnect();
+        if (prevId) body.previousResponseId = prevId;
+        return body;
+    };
     chatEl.responseInterceptor = function(response) {
         if (response && response.responseId) {
             sessionStorage.setItem('chatResponseId', response.responseId);
-            chatEl.connect = getChatConnect();
         }
         return response;
     };
@@ -383,6 +379,9 @@
             container: {
                 default: { backgroundColor: '#333', borderRadius: '8px', marginLeft: '6px', padding: '0 12px' },
                 hover:   { backgroundColor: '#555' }
+            },
+            svg: {
+                styles: { default: { filter: 'brightness(0) invert(1)' } }
             }
         },
         loading: {
