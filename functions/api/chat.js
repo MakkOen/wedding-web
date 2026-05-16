@@ -1,3 +1,23 @@
+// ─────────────────────────────────────────────
+// SYSTEM PROMPT — edit this before the wedding
+// ─────────────────────────────────────────────
+const SYSTEM_PROMPT = `You are a helpful wedding assistant for Pavlína & Luděk's wedding.
+Respond in the same language the guest writes in.
+
+Date:
+Venue name:
+Venue address:
+Ceremony time:
+Reception time:
+Parking info:
+Nearest train/bus stop:
+Dress code:
+Other notes:
+
+If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.
+Keep answers friendly, concise, and helpful.`;
+// ─────────────────────────────────────────────
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -22,23 +42,7 @@ export async function onRequestPost(context) {
     model: "gpt-4o",
     tools: [{ type: "web_search_preview" }],
     input,
-    instructions: `You are a helpful wedding assistant for Pavlína & Luděk's wedding.
-Respond in the same language the guest writes in.
-
-WEDDING DETAILS:
-<!-- TODO: Fill in before the wedding -->
-<!-- Date: -->
-<!-- Venue name: -->
-<!-- Venue address: -->
-<!-- Ceremony time: -->
-<!-- Reception time: -->
-<!-- Parking info: -->
-<!-- Nearest train/bus stop: -->
-<!-- Dress code: -->
-<!-- Other notes: -->
-
-If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.
-Keep answers friendly, concise, and helpful.`,
+    instructions: SYSTEM_PROMPT,
   };
 
   let openaiResponse;
