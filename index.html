@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pavlína &amp; Luděk</title>
+    <script src="https://cdn.jsdelivr.net/npm/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
     <style>
         * {
             margin: 0;
@@ -203,8 +204,6 @@
     </style>
 </head>
 <body>
-    <img class="invitation" src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
-
     <nav class="tab-bar" role="tablist">
         <button class="active" role="tab" data-tab="rsvp">Hlavní stránka</button>
         <button role="tab" data-tab="info">Informace</button>
@@ -212,6 +211,7 @@
 
     <!-- Tab 1: RSVP (original) -->
     <div id="tab-rsvp">
+        <img class="invitation" src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
         <section class="rsvp-section">
             <h2>Potvrďte účast</h2>
             <p class="subtitle">Prosíme, dejte nám vědět, zda se zúčastníte.</p>
@@ -255,23 +255,9 @@
     <!-- Floating chat bubble -->
     <button id="chat-bubble" aria-label="Otevřít asistenta">💬</button>
     <div id="chat-panel" role="dialog" aria-label="Asistent">
-        <deep-chat
-            connect='{"url":"/api/chat","method":"POST"}'
-            introMessage='{"text":"Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?"}'
-            browserStorage='{"maxMessages":-1}'
-            messageStyles='{
-                "default": {
-                    "ai": {"bubble": {"backgroundColor":"#f0f0f0","color":"#333","fontFamily":"Georgia, serif"}},
-                    "user": {"bubble": {"backgroundColor":"#333","color":"#fafafa","fontFamily":"Georgia, serif"}}
-                }
-            }'
-            submitButtonStyles='{"submit":{"container":{"default":{"backgroundColor":"#333"},"hover":{"backgroundColor":"#555"}}}}'
-            inputAreaStyle='{"fontFamily":"Georgia, serif"}'
-            style="border-radius:12px;"
-        ></deep-chat>
+        <deep-chat id="deep-chat" style="border-radius:12px;"></deep-chat>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
     <script>
     (function() {
         /* ── Tab switching ── */
@@ -284,6 +270,20 @@
                 document.getElementById('tab-info').hidden = (btn.dataset.tab !== 'info');
             });
         });
+
+        /* ── DeepChat config ── */
+        var chatEl = document.getElementById('deep-chat');
+        chatEl.connect = { url: '/api/chat', method: 'POST' };
+        chatEl.introMessage = { text: 'Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?' };
+        chatEl.browserStorage = { maxMessages: -1 };
+        chatEl.messageStyles = {
+            default: {
+                ai:   { bubble: { backgroundColor: '#f0f0f0', color: '#333', fontFamily: 'Georgia, serif' } },
+                user: { bubble: { backgroundColor: '#333',    color: '#fafafa', fontFamily: 'Georgia, serif' } }
+            }
+        };
+        chatEl.submitButtonStyles = { submit: { container: { default: { backgroundColor: '#333' }, hover: { backgroundColor: '#555' } } } };
+        chatEl.inputAreaStyle = { fontFamily: 'Georgia, serif' };
 
         /* ── Chat bubble toggle ── */
         var bubble = document.getElementById('chat-bubble');
