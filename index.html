@@ -318,7 +318,22 @@
     var chatEl = document.getElementById('deep-chat');
     chatEl.style.width = '360px';
     chatEl.style.height = '520px';
-    chatEl.connect = { url: '/api/chat', method: 'POST' };
+    function getChatConnect() {
+        var prevId = sessionStorage.getItem('chatResponseId');
+        return {
+            url: '/api/chat',
+            method: 'POST',
+            additionalBodyProps: prevId ? { previousResponseId: prevId } : {}
+        };
+    }
+    chatEl.connect = getChatConnect();
+    chatEl.responseInterceptor = function(response) {
+        if (response && response.responseId) {
+            sessionStorage.setItem('chatResponseId', response.responseId);
+            chatEl.connect = getChatConnect();
+        }
+        return response;
+    };
     chatEl.introMessage = { text: 'Ahoj! Jsem Šemík, pip! Svatební papoušek Pavlíny a Luďka. Zeptejte se mě na cokoliv ohledně svatby!' };
     chatEl.avatars = {
         ai:   { src: '/avatar_round.png', styles: { avatar: { width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' } } },
@@ -341,8 +356,8 @@
             },
             user: {
                 bubble: {
-                    backgroundColor: '#333',
-                    color: '#fafafa',
+                    backgroundColor: '#dbeafe',
+                    color: '#1e3a5f',
                     fontFamily: 'Georgia, serif',
                     fontSize: '0.92rem',
                     borderRadius: '12px 12px 2px 12px',
@@ -369,6 +384,9 @@
                 default: { backgroundColor: '#333', borderRadius: '8px', marginLeft: '6px', padding: '0 12px' },
                 hover:   { backgroundColor: '#555' }
             }
+        },
+        loading: {
+            container: { default: { display: 'none' } }
         }
     };
     </script>
