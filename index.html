@@ -20,21 +20,49 @@
             color: #333;
             padding: 2rem 1rem;
         }
-        img {
+        img.invitation {
             max-width: 100%;
             max-height: 85vh;
             object-fit: contain;
             margin-bottom: 3rem;
         }
+
+        /* ── Tab bar ── */
+        .tab-bar {
+            display: flex;
+            max-width: 480px;
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2.5rem;
+        }
+        .tab-bar button {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 0.95rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #888;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            transition: color 0.15s, border-color 0.15s;
+            margin-bottom: -1px;
+        }
+        .tab-bar button:hover { color: #555; }
+        .tab-bar button.active {
+            color: #333;
+            border-bottom-color: #333;
+        }
+
+        /* ── RSVP tab ── */
         .rsvp-section {
             max-width: 480px;
             width: 100%;
             text-align: center;
             margin-bottom: 3rem;
         }
-        .rsvp-form {
-            text-align: left;
-        }
+        .rsvp-form { text-align: left; }
         .rsvp-section h2 {
             font-weight: normal;
             font-size: 1.8rem;
@@ -71,9 +99,7 @@
             outline: none;
             border-color: #999;
         }
-        .rsvp-form input[type="number"] {
-            max-width: 120px;
-        }
+        .rsvp-form input[type="number"] { max-width: 120px; }
         .rsvp-form button {
             display: block;
             margin-top: 2.5rem;
@@ -88,59 +114,192 @@
             letter-spacing: 0.05em;
             transition: background 0.2s;
         }
-        .rsvp-form button:hover {
-            background: #555;
-        }
-        .rsvp-form button:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-        }
+        .rsvp-form button:hover { background: #555; }
+        .rsvp-form button:disabled { background: #aaa; cursor: not-allowed; }
         .rsvp-message {
             margin-top: 1.2rem;
             font-size: 0.95rem;
             min-height: 1.5em;
         }
         .rsvp-message.success { color: #5a7a5a; }
-        .rsvp-message.error { color: #a05050; }
+        .rsvp-message.error   { color: #a05050; }
+
+        /* ── Informace tab ── */
+        .info-section {
+            max-width: 480px;
+            width: 100%;
+            margin-bottom: 3rem;
+        }
+        .info-section h2 {
+            font-weight: normal;
+            font-size: 1.8rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        .info-placeholder {
+            border: 1px dashed #ccc;
+            border-radius: 6px;
+            padding: 2.5rem;
+            text-align: center;
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        /* ── DeepChat floating bubble ── */
+        #chat-bubble {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #333;
+            color: #fafafa;
+            font-size: 1.4rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: background 0.2s;
+        }
+        #chat-bubble:hover { background: #555; }
+
+        #chat-panel {
+            position: fixed;
+            bottom: 5rem;
+            right: 1.5rem;
+            width: 360px;
+            height: 520px;
+            z-index: 999;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: none;
+        }
+        #chat-panel.open { display: block; }
+
+        /* Make DeepChat fill the panel */
+        #chat-panel deep-chat {
+            width: 360px;
+            height: 520px;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 420px) {
+            #chat-panel {
+                right: 0.5rem;
+                width: calc(100vw - 1rem);
+            }
+            #chat-panel deep-chat {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <img src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
+    <img class="invitation" src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
 
-    <section class="rsvp-section">
-        <h2>Potvrďte účast</h2>
-        <p class="subtitle">Prosíme, dejte nám vědět, zda se zúčastníte.</p>
+    <nav class="tab-bar" role="tablist">
+        <button class="active" role="tab" data-tab="rsvp">Hlavní stránka</button>
+        <button role="tab" data-tab="info">Informace</button>
+    </nav>
 
-        <form class="rsvp-form" id="rsvpForm" novalidate>
-            <label for="jmeno">Jméno</label>
-            <input type="text" id="jmeno" name="jmeno"
-                   required placeholder="Jméno a příjmení" autocomplete="name">
+    <!-- Tab 1: RSVP (original) -->
+    <div id="tab-rsvp">
+        <section class="rsvp-section">
+            <h2>Potvrďte účast</h2>
+            <p class="subtitle">Prosíme, dejte nám vědět, zda se zúčastníte.</p>
 
-            <label for="pocet_osob">Počet osob</label>
-            <input type="number" id="pocet_osob" name="pocet_osob"
-                   required min="0" max="20" value="1">
+            <form class="rsvp-form" id="rsvpForm" novalidate>
+                <label for="jmeno">Jméno</label>
+                <input type="text" id="jmeno" name="jmeno"
+                       required placeholder="Jméno a příjmení" autocomplete="name">
 
-            <label for="pocet_deti">Počet dětí</label>
-            <input type="number" id="pocet_deti" name="pocet_deti"
-                   required min="0" max="20" value="0">
+                <label for="pocet_osob">Počet osob</label>
+                <input type="number" id="pocet_osob" name="pocet_osob"
+                       required min="0" max="20" value="1">
 
-            <!-- Honeypot anti-spam field -->
-            <input type="text" name="website" id="honeypot"
-                   style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+                <label for="pocet_deti">Počet dětí</label>
+                <input type="number" id="pocet_deti" name="pocet_deti"
+                       required min="0" max="20" value="0">
 
-            <button type="submit">Odeslat</button>
-        </form>
+                <!-- Honeypot anti-spam field -->
+                <input type="text" name="website" id="honeypot"
+                       style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
 
-        <div class="rsvp-message" id="rsvpMessage"></div>
-    </section>
+                <button type="submit">Odeslat</button>
+            </form>
 
+            <div class="rsvp-message" id="rsvpMessage"></div>
+        </section>
+    </div>
+
+    <!-- Tab 2: Informace -->
+    <div id="tab-info" hidden>
+        <section class="info-section">
+            <h2>Informace</h2>
+            <!-- TODO: Add wedding details, schedule, directions, map, dress code, etc. -->
+            <div class="info-placeholder">
+                Informace budou brzy doplněny.<br>
+                Máte dotazy? Použijte chatovací okno vpravo dole.
+            </div>
+        </section>
+    </div>
+
+    <!-- Floating chat bubble -->
+    <button id="chat-bubble" aria-label="Otevřít asistenta">💬</button>
+    <div id="chat-panel" role="dialog" aria-label="Asistent">
+        <deep-chat
+            connect='{"url":"/api/chat","method":"POST"}'
+            introMessage='{"text":"Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?"}'
+            browserStorage='{"maxMessages":-1}'
+            messageStyles='{
+                "default": {
+                    "ai": {"bubble": {"backgroundColor":"#f0f0f0","color":"#333","fontFamily":"Georgia, serif"}},
+                    "user": {"bubble": {"backgroundColor":"#333","color":"#fafafa","fontFamily":"Georgia, serif"}}
+                }
+            }'
+            submitButtonStyles='{"submit":{"container":{"default":{"backgroundColor":"#333"},"hover":{"backgroundColor":"#555"}}}}'
+            inputAreaStyle='{"fontFamily":"Georgia, serif"}'
+            style="border-radius:12px;"
+        ></deep-chat>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
     <script>
     (function() {
+        /* ── Tab switching ── */
+        var tabs = document.querySelectorAll('.tab-bar button');
+        tabs.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                btn.classList.add('active');
+                document.getElementById('tab-rsvp').hidden = (btn.dataset.tab !== 'rsvp');
+                document.getElementById('tab-info').hidden = (btn.dataset.tab !== 'info');
+            });
+        });
+
+        /* ── Chat bubble toggle ── */
+        var bubble = document.getElementById('chat-bubble');
+        var panel  = document.getElementById('chat-panel');
+        bubble.addEventListener('click', function() {
+            var isOpen = panel.classList.toggle('open');
+            bubble.setAttribute('aria-expanded', isOpen);
+            bubble.textContent = isOpen ? '✕' : '💬';
+        });
+
+        /* ── RSVP form ── */
         var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLyi4ucY7d9vyc8ntimOKoMIFBScfEJ8EOEs3K5lzSKRK87YAysZkNkBBfZXBXEdi-/exec';
 
-        var form = document.getElementById('rsvpForm');
-        var msg  = document.getElementById('rsvpMessage');
-        var btn  = form.querySelector('button');
+        var form    = document.getElementById('rsvpForm');
+        var msg     = document.getElementById('rsvpMessage');
+        var rsvpBtn = form.querySelector('button');
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -162,8 +321,8 @@
                 return;
             }
 
-            btn.disabled = true;
-            btn.textContent = 'Odesílám...';
+            rsvpBtn.disabled = true;
+            rsvpBtn.textContent = 'Odesílám...';
             showMsg('', '');
 
             fetch(SCRIPT_URL, {
@@ -187,8 +346,8 @@
                 showMsg('Došlo k chybě. Zkuste to prosím znovu.', 'error');
             })
             .finally(function() {
-                btn.disabled = false;
-                btn.textContent = 'Odeslat';
+                rsvpBtn.disabled = false;
+                rsvpBtn.textContent = 'Odeslat';
             });
         });
 
