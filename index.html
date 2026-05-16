@@ -272,18 +272,21 @@
         });
 
         /* ── DeepChat config ── */
-        var chatEl = document.getElementById('deep-chat');
-        chatEl.connect = { url: '/api/chat', method: 'POST' };
-        chatEl.introMessage = { text: 'Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?' };
-        chatEl.browserStorage = { maxMessages: -1 };
-        chatEl.messageStyles = {
-            default: {
-                ai:   { bubble: { backgroundColor: '#f0f0f0', color: '#333', fontFamily: 'Georgia, serif' } },
-                user: { bubble: { backgroundColor: '#333',    color: '#fafafa', fontFamily: 'Georgia, serif' } }
-            }
-        };
-        chatEl.submitButtonStyles = { submit: { container: { default: { backgroundColor: '#333' }, hover: { backgroundColor: '#555' } } } };
-        chatEl.inputAreaStyle = { fontFamily: 'Georgia, serif' };
+        function initDeepChat() {
+            var chatEl = document.getElementById('deep-chat');
+            chatEl.connect = { url: '/api/chat', method: 'POST' };
+            chatEl.introMessage = { text: 'Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby — místo konání, doprava, program a podobně. Na co se chcete zeptat?' };
+            chatEl.browserStorage = { maxMessages: -1 };
+            chatEl.messageStyles = {
+                default: {
+                    ai:   { bubble: { backgroundColor: '#f0f0f0', color: '#333', fontFamily: 'Georgia, serif' } },
+                    user: { bubble: { backgroundColor: '#333',    color: '#fafafa', fontFamily: 'Georgia, serif' } }
+                }
+            };
+            chatEl.submitButtonStyles = { submit: { container: { default: { backgroundColor: '#333' }, hover: { backgroundColor: '#555' } } } };
+            chatEl.inputAreaStyle = { fontFamily: 'Georgia, serif' };
+        }
+        customElements.whenDefined('deep-chat').then(initDeepChat);
 
         /* ── Chat bubble toggle ── */
         var bubble = document.getElementById('chat-bubble');
