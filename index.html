@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pavlína &amp; Luděk</title>
-    <link rel="icon" href="/avatar.png" type="image/png">
+    <link rel="icon" href="/avatar_round.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -308,7 +308,7 @@
     </div>
 
     <!-- Floating chat bubble -->
-    <button id="chat-bubble" aria-label="Otevřít asistenta"><img src="/avatar.png" alt="" id="chat-bubble-img" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;"></button>
+    <button id="chat-bubble" aria-label="Otevřít asistenta"><img src="/avatar_round.png" alt="" id="chat-bubble-img" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;"></button>
     <div id="chat-panel" role="dialog" aria-label="Asistent">
         <deep-chat id="deep-chat"></deep-chat>
     </div>
@@ -321,7 +321,7 @@
     chatEl.connect = { url: '/api/chat', method: 'POST' };
     chatEl.introMessage = { text: 'Ahoj! Jsem Šemík, pip! Svatební papoušek Pavlíny a Luďka. Zeptejte se mě na cokoliv ohledně svatby!' };
     chatEl.avatars = {
-        ai:   { src: '/avatar.png', styles: { avatar: { width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' } } },
+        ai:   { src: '/avatar_round.png', styles: { avatar: { width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' } } },
         user: { styles: { avatar: { display: 'none' } } }
     };
     chatEl.names = false;
@@ -395,7 +395,7 @@
             bubble.setAttribute('aria-expanded', isOpen);
             bubble.innerHTML = isOpen
                 ? '<span style="font-size:1.2rem;line-height:1;">✕</span>'
-                : '<img src="/avatar.png" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">';
+                : '<img src="/avatar_round.png" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">';
         });
 
         /* ── RSVP form ── */
