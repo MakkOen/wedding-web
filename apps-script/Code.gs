@@ -1,7 +1,13 @@
 function doGet() {
-  return ContentService
-    .createTextOutput("RSVP endpoint is running.")
-    .setMimeType(ContentService.MimeType.TEXT);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Ucast");
+  if (!sheet) {
+    return _jsonResponse({ result: "error", error: "Sheet not found" });
+  }
+  var rows = sheet.getDataRange().getValues();
+  var attendees = rows.slice(1).map(function(row) {
+    return { jmeno: row[0], pocet_osob: row[1], pocet_deti: row[2], timestamp: row[3] };
+  });
+  return _jsonResponse({ result: "success", attendees: attendees });
 }
 
 function doPost(e) {

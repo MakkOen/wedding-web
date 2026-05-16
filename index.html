@@ -137,15 +137,44 @@
             margin-bottom: 1.5rem;
             color: #555;
         }
-        .info-placeholder {
-            border: 1px dashed #ccc;
+        .info-section h3 {
+            font-weight: normal;
+            font-size: 1.1rem;
+            letter-spacing: 0.04em;
+            color: #555;
+            margin-top: 2rem;
+            margin-bottom: 0.6rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3rem;
+        }
+        .info-section p, .info-section li {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.7;
+        }
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .info-section ul li {
+            padding: 0.2rem 0;
+        }
+        .info-section a {
+            color: #555;
+        }
+        .info-map {
+            width: 100%;
+            height: 240px;
+            border: none;
             border-radius: 6px;
-            padding: 2.5rem;
-            text-align: center;
-            color: #aaa;
-            font-style: italic;
-            font-size: 0.9rem;
-            line-height: 1.8;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .info-address {
+            font-size: 0.88rem;
+            color: #888;
+            margin-bottom: 0.3rem;
         }
 
         /* ── DeepChat floating bubble ── */
@@ -186,8 +215,8 @@
 
         /* Make DeepChat fill the panel */
         #chat-panel deep-chat {
-            width: 100%;
-            height: 100%;
+            width: 360px;
+            height: 520px;
             border-radius: 12px;
         }
 
@@ -196,18 +225,26 @@
                 right: 0.5rem;
                 width: calc(100vw - 1rem);
             }
+            #chat-panel deep-chat {
+                width: calc(100vw - 1rem);
+            }
         }
     </style>
 </head>
 <body>
     <nav class="tab-bar" role="tablist">
-        <button class="active" role="tab" data-tab="rsvp">Hlavní stránka</button>
+        <button class="active" role="tab" data-tab="hlavni">Hlavní stránka</button>
+        <button role="tab" data-tab="rsvp">Potvrzení účasti</button>
         <button role="tab" data-tab="info">Informace</button>
     </nav>
 
-    <!-- Tab 1: RSVP (original) -->
-    <div id="tab-rsvp">
-        <img class="invitation" src="invitation.JPG" alt="Svatební oznámení — Pavlína Hlavatá a Luděk Matyska">
+    <!-- Tab 1: Main (invitation image only) -->
+    <div id="tab-hlavni">
+        <img class="invitation" src="invitation.JPG" alt="Svatební oznámení Pavlíny a Luďka">
+    </div>
+
+    <!-- Tab 2: RSVP -->
+    <div id="tab-rsvp" hidden>
         <section class="rsvp-section">
             <h2>Potvrďte účast</h2>
             <p class="subtitle">Prosíme, dejte nám vědět, zda se zúčastníte.</p>
@@ -236,33 +273,101 @@
         </section>
     </div>
 
-    <!-- Tab 2: Informace -->
+    <!-- Tab 3: Informace -->
     <div id="tab-info" hidden>
         <section class="info-section">
             <h2>Informace</h2>
-            <!-- TODO: Add wedding details, schedule, directions, map, dress code, etc. -->
-            <div class="info-placeholder">
-                Informace budou brzy doplněny.<br>
-                Máte dotazy? Použijte chatovací okno vpravo dole.
-            </div>
+
+            <h3>Místo</h3>
+            <iframe
+                class="info-map"
+                loading="lazy"
+                src="https://mapy.com/cs/zakladni?x=16.5580595&y=49.2567901&z=16&source=coor&id=16.5580595%2C49.2567901&frame=1"
+            ></iframe>
+            <p class="info-address">Lesní areál U Mravence, Jinačovice 254, 664 34 Jinačovice</p>
+            <p><a href="https://www.umravence.cz/" target="_blank" rel="noopener">umravence.cz</a></p>
+
+            <h3>Program</h3>
+            <p>Sobota 12. 9. 2026. Obřad začíná ve 12:00, prosíme dorazte nejpozději v 11:00.</p>
+
+            <h3>Ubytování</h3>
+            <p>Můžete přijet i den dříve. Na místě bude možnost noclehu, kontaktujte nás pro více informací, nebo si přivezte vlastní stan. Odjet lze i v neděli.</p>
+
+            <h3>Doprava</h3>
+            <ul>
+                <li>Zastávka autobusu <a href="https://mapy.cz/en/turisticka?source=pubt&id=15208917&ds=1&x=16.5731777&y=49.2524728&z=16" target="_blank" rel="noopener"><strong>Žilkova</strong></a> (linky 304, 41, noční N91) + 1,5 km pěšky</li>
+                <li>Zastávka tramvaje <a href="https://mapy.cz/en/turisticka?source=pubt&id=15225051&ds=1&x=16.5731777&y=49.2524728&z=16" target="_blank" rel="noopener"><strong>Řečkovice</strong></a> (linka 1) + 2,5 km pěšky</li>
+                <li>Parkování na místě k dispozici, ale kapacita je omezená</li>
+                <li>Rádi zajistíme svoz ze zastávky, ozvěte se nám</li>
+            </ul>
+
+            <h3>Dotazy</h3>
+            <p>Zeptejte se Šemíka v chatu vpravo dole, nebo se ozvěte přímo nám.</p>
         </section>
     </div>
 
     <!-- Floating chat bubble -->
-    <button id="chat-bubble" aria-label="Otevřít asistenta">💬</button>
+    <button id="chat-bubble" aria-label="Otevřít asistenta"><img src="/avatar.png" alt="" id="chat-bubble-img" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;"></button>
     <div id="chat-panel" role="dialog" aria-label="Asistent">
         <deep-chat id="deep-chat"></deep-chat>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
-    <script>
+    <script type="module" src="https://unpkg.com/deep-chat@2.4.2/dist/deepChat.bundle.js"></script>
+    <script type="module">
     var chatEl = document.getElementById('deep-chat');
+    chatEl.style.width = '360px';
+    chatEl.style.height = '520px';
     chatEl.connect = { url: '/api/chat', method: 'POST' };
-    chatEl.introMessage = { text: 'Ahoj! Jsem váš svatební asistent. Mohu vám pomoci s dotazy ohledně svatby. Na co se chcete zeptat?' };
+    chatEl.introMessage = { text: 'Ahoj! Jsem Šemík, pip! Svatební papoušek Pavlíny a Luďka. Zeptejte se mě na cokoliv ohledně svatby!' };
+    chatEl.avatars = {
+        ai:   { src: '/avatar.png', styles: { avatar: { width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' } } },
+        user: { styles: { avatar: { display: 'none' } } }
+    };
+    chatEl.names = false;
+    chatEl.displayLoadingBubble = true;
     chatEl.messageStyles = {
         default: {
-            ai:   { bubble: { backgroundColor: '#f0f0f0', color: '#333' } },
-            user: { bubble: { backgroundColor: '#333', color: '#fafafa' } }
+            ai: {
+                bubble: {
+                    backgroundColor: '#f5f5f5',
+                    color: '#333',
+                    fontFamily: 'Georgia, serif',
+                    fontSize: '0.92rem',
+                    borderRadius: '12px 12px 12px 2px',
+                    padding: '10px 14px',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.06)'
+                }
+            },
+            user: {
+                bubble: {
+                    backgroundColor: '#333',
+                    color: '#fafafa',
+                    fontFamily: 'Georgia, serif',
+                    fontSize: '0.92rem',
+                    borderRadius: '12px 12px 2px 12px',
+                    padding: '10px 14px'
+                }
+            }
+        }
+    };
+    chatEl.inputAreaStyle = {
+        backgroundColor: '#fff',
+        borderTop: '1px solid #eee',
+        padding: '8px'
+    };
+    chatEl.textInput = {
+        placeholder: { text: 'Napište svůj dotaz…' },
+        styles: {
+            container: { borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#fafafa' },
+            text: { fontFamily: 'Georgia, serif', fontSize: '0.92rem', color: '#333', padding: '6px 10px' }
+        }
+    };
+    chatEl.submitButtonStyles = {
+        submit: {
+            container: {
+                default: { backgroundColor: '#333', borderRadius: '8px', marginLeft: '6px', padding: '0 12px' },
+                hover:   { backgroundColor: '#555' }
+            }
         }
     };
     </script>
@@ -275,8 +380,9 @@
             btn.addEventListener('click', function() {
                 tabs.forEach(function(t) { t.classList.remove('active'); });
                 btn.classList.add('active');
-                document.getElementById('tab-rsvp').hidden = (btn.dataset.tab !== 'rsvp');
-                document.getElementById('tab-info').hidden = (btn.dataset.tab !== 'info');
+                ['hlavni', 'rsvp', 'info'].forEach(function(id) {
+                    document.getElementById('tab-' + id).hidden = (btn.dataset.tab !== id);
+                });
             });
         });
 
@@ -286,7 +392,9 @@
         bubble.addEventListener('click', function() {
             var isOpen = panel.classList.toggle('open');
             bubble.setAttribute('aria-expanded', isOpen);
-            bubble.textContent = isOpen ? '✕' : '💬';
+            bubble.innerHTML = isOpen
+                ? '<span style="font-size:1.2rem;line-height:1;">✕</span>'
+                : '<img src="/avatar.png" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:block;">';
         });
 
         /* ── RSVP form ── */
