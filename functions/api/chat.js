@@ -23,6 +23,7 @@ Parking: Available on site but limited
 Nearest bus stop: Zilkova (buses 304, 41, night bus N91), 1.5 km walk to venue
 Nearest tram stop: Reckovice (tram 1), 2.5 km walk to venue
 Rides from stop: Can be arranged, guests should contact the couple
+Taxi/rideshare: Bolt and Uber both serve the venue directly
 Accommodation: Guests can arrive the day before (Friday). Sleeping spots available on site, contact the couple for details, or bring a tent. Can stay until Sunday.
 
 If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.`;
