@@ -20,8 +20,9 @@ Venue name: Lesni areal U Mravence
 Venue address: Jinacovice 254, 664 34 Jinacovice (umravence.cz)
 Ceremony time: 12:00, guests should arrive by 11:00
 Parking: Available on site but limited
-Nearest bus stop: Zilkova (buses 304, 41, night bus N91), 1.5 km walk to venue
-Nearest tram stop: Reckovice (tram 1), 2.5 km walk to venue
+Public transport (MHD) options:
+- Bus stop Zilkova (MHD buses 304, 41, night bus N91), 1.5 km walk to venue
+- Tram stop Reckovice (MHD tram line 1), 2.5 km walk to venue
 Rides from stop: Can be arranged, guests should contact the couple
 Taxi/rideshare: Bolt and Uber both serve the venue directly
 Accommodation: Guests can arrive the day before (Friday). Sleeping spots available on site, contact the couple for details, or bring a tent. Can stay until Sunday.
