@@ -360,9 +360,9 @@
         bubble.addEventListener('click', function() {
             isOpen = !isOpen;
             panel.classList.toggle('open', isOpen);
-            bubble.querySelector('img') && (bubble.innerHTML = isOpen
+            bubble.innerHTML = isOpen
                 ? '<span class="close-x">✕</span>'
-                : '<img src="/avatar_round.png" alt="Šemík">');
+                : '<img src="/avatar_round.png" alt="Šemík">';
         });
 
         sendBtn.addEventListener('click', send);
