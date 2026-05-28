@@ -352,7 +352,7 @@
         // Restore history
         var history = JSON.parse(sessionStorage.getItem('chatHistory') || '[]');
         if (history.length === 0) {
-            appendMsg('ai', 'Ahoj! Jsem Šemík, pip! Svatební papoušek Pavlíny a Luďka. Zeptejte se mě na cokoliv ohledně svatby!');
+            appendMsg('ai', 'Ahoj! Jsem Šemík, pip! Svatební papoušek Páji a Makka. Zeptejte se mě na cokoliv ohledně svatby!');
         } else {
             history.forEach(function(m) { appendMsg(m.role, m.text, true); });
         }
