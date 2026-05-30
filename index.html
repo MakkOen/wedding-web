@@ -258,8 +258,8 @@
             <form class="rsvp-form" id="rsvpForm" novalidate>
                 <label for="jmeno">Jméno</label>
                 <input type="text" id="jmeno" name="jmeno" required placeholder="Jméno a příjmení" autocomplete="name">
-                <label for="pocet_osob">Počet osob</label>
-                <input type="number" id="pocet_osob" name="pocet_osob" required min="0" max="20" value="1">
+                <label for="pocet_osob">Počet dospělích</label>
+                <input type="number" id="pocet_osob" name="pocet_osob" required min="0" max="2" value="1">
                 <label for="pocet_deti">Počet dětí</label>
                 <input type="number" id="pocet_deti" name="pocet_deti" required min="0" max="20" value="0">
                 <input type="text" name="website" id="honeypot" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
@@ -507,7 +507,7 @@
             var pocetDeti = parseInt(form.pocet_deti.value, 10);
 
             if (!jmeno) { showMsg('Prosíme, vyplňte své jméno.', 'error'); return; }
-            if (isNaN(pocetOsob) || pocetOsob < 0) { showMsg('Prosíme, zadejte platný počet osob.', 'error'); return; }
+            if (isNaN(pocetOsob) || pocetOsob < 0) { showMsg('Prosíme, zadejte platný počet dospělích.', 'error'); return; }
             if (isNaN(pocetDeti) || pocetDeti < 0) { showMsg('Prosíme, zadejte platný počet dětí.', 'error'); return; }
 
             rsvpBtn.disabled = true;
