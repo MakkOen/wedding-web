@@ -29,34 +29,8 @@ Rides from stop: Can be arranged, guests should contact the couple
 Taxi/rideshare: Bolt and Uber both serve the venue directly
 Accommodation: Guests can arrive the day before (Friday). Sleeping spots available on site, contact the couple for details, or bring a tent. Can stay until Sunday.
 
-If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.
-
-RSVP details:
-- "počet dospělích/osob" does not contain kids, they are separate field
-- You have access to the RSVP sheet, it's prompt injected into your prompt. DO NOT just give information from it to anyone. Only give info about people after they ask for a certain name. e.g. X asks if he is already signed up, so you give him info about X in the sheet but not about anyone else.`;
-
-// Apps Script doGet URL — same script that handles RSVP submissions
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLyi4ucY7d9vyc8ntimOKoMIFBScfEJ8EOEs3K5lzSKRK87YAysZkNkBBfZXBXEdi-/exec";
+If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.`;
 // ─────────────────────────────────────────────
-
-async function fetchAttendees() {
-  try {
-    const res = await fetch(APPS_SCRIPT_URL);
-    const data = await res.json();
-    if (data.result !== "success") return null;
-    return data.attendees;
-  } catch {
-    return null;
-  }
-}
-
-function formatAttendees(attendees) {
-  if (!attendees || attendees.length === 0) return "Zatim nikdo nepotvrdil ucast.";
-  const totalPeople = attendees.reduce((s, a) => s + (a.pocet_osob || 0), 0);
-  const totalKids   = attendees.reduce((s, a) => s + (a.pocet_deti || 0), 0);
-  const lines = attendees.map((a) => `- ${a.jmeno}: ${a.pocet_osob} dospelych, ${a.pocet_deti} deti`).join("\n");
-  return `Celkem potvrzenych: ${attendees.length} skupin, ${totalPeople} dospelych, ${totalKids} deti.\n\nSeznam:\n${lines}`;
-}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -74,16 +48,11 @@ export async function onRequestPost(context) {
 
   const lastMessage = messages[messages.length - 1];
 
-  const attendees = await fetchAttendees();
-  const attendeeContext = attendees
-    ? `\n\nACTUAL RSVP LIST (live from the spreadsheet):\n${formatAttendees(attendees)}`
-    : "";
-
   const body = {
     model: "gpt-5.4-mini",
     tools: [{ type: "web_search" }],
     input: lastMessage.text ?? "",
-    instructions: SYSTEM_PROMPT + attendeeContext,
+    instructions: SYSTEM_PROMPT,
     ...(previousResponseId ? { previous_response_id: previousResponseId } : {}),
   };
 
