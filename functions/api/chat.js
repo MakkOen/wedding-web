@@ -30,7 +30,33 @@ Taxi/rideshare: Bolt and Uber both serve the venue directly
 Accommodation: Guests can arrive the day before (Friday). Sleeping spots available on site, contact the couple for details, or bring a tent. Can stay until Sunday.
 
 If a guest asks about directions or transit, use the web search tool to find accurate, up-to-date information.`;
+
+// Apps Script doGet URL — same script that handles RSVP submissions.
+// NOTE: kept for potential reuse (e.g. an on-demand RSVP lookup). It is
+// intentionally not called and the guest list is NOT injected into the prompt.
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyLyi4ucY7d9vyc8ntimOKoMIFBScfEJ8EOEs3K5lzSKRK87YAysZkNkBBfZXBXEdi-/exec";
 // ─────────────────────────────────────────────
+
+// Unused: retained for future reuse. Fetches the live attendee list from the sheet.
+async function fetchAttendees() {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL);
+    const data = await res.json();
+    if (data.result !== "success") return null;
+    return data.attendees;
+  } catch {
+    return null;
+  }
+}
+
+// Unused: retained for future reuse. Formats the attendee list as text.
+function formatAttendees(attendees) {
+  if (!attendees || attendees.length === 0) return "Zatim nikdo nepotvrdil ucast.";
+  const totalPeople = attendees.reduce((s, a) => s + (a.pocet_osob || 0), 0);
+  const totalKids   = attendees.reduce((s, a) => s + (a.pocet_deti || 0), 0);
+  const lines = attendees.map((a) => `- ${a.jmeno}: ${a.pocet_osob} dospelych, ${a.pocet_deti} deti`).join("\n");
+  return `Celkem potvrzenych: ${attendees.length} skupin, ${totalPeople} dospelych, ${totalKids} deti.\n\nSeznam:\n${lines}`;
+}
 
 export async function onRequestPost(context) {
   const { request, env } = context;
